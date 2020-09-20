@@ -18,9 +18,9 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* weatherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* weatherTests.m */; };
 		3880AFC1CB33439279FC5EDB /* libPods-weather-weatherTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C0C91FD435DD90F07127540B /* libPods-weather-weatherTests.a */; };
+		6A1251FA2506468182520558 /* Gilroy-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CCA3D5CBC014D40BD6E8750 /* Gilroy-Bold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		D4B00D91F4568C7148968BB0 /* libPods-weather-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F37186AC20BF79E08E3D5CE6 /* libPods-weather-tvOSTests.a */; };
-		6A1251FA2506468182520558 /* Gilroy-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CCA3D5CBC014D40BD6E8750 /* Gilroy-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +60,7 @@
 		34996902E0CF1E6E98D94C9A /* libPods-weather.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-weather.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		491006A62AB13382FE3A18B2 /* Pods-weather-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weather-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-weather-tvOSTests/Pods-weather-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = weather/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8CCA3D5CBC014D40BD6E8750 /* Gilroy-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-Bold.ttf"; path = "../assets/fonts/Gilroy-Bold.ttf"; sourceTree = "<group>"; };
 		96F5A18AFED6D18C77B13CBB /* Pods-weather-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weather-tvOS.release.xcconfig"; path = "Target Support Files/Pods-weather-tvOS/Pods-weather-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		AA86D6299F8FDB8D2233D41F /* Pods-weather-weatherTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weather-weatherTests.debug.xcconfig"; path = "Target Support Files/Pods-weather-weatherTests/Pods-weather-weatherTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B080E27E3DDE85A763E6C261 /* Pods-weather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weather.release.xcconfig"; path = "Target Support Files/Pods-weather/Pods-weather.release.xcconfig"; sourceTree = "<group>"; };
@@ -68,7 +69,6 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F37186AC20BF79E08E3D5CE6 /* libPods-weather-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-weather-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8CCA3D5CBC014D40BD6E8750 /* Gilroy-Bold.ttf */ = {isa = PBXFileReference; name = "Gilroy-Bold.ttf"; path = "../assets/fonts/Gilroy-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +151,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		50032EF02FA540D0832FA7E1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8CCA3D5CBC014D40BD6E8750 /* Gilroy-Bold.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		5588D583EA4B9F6D350E693E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -199,15 +207,6 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
-		};
-		50032EF02FA540D0832FA7E1 /* Resources */ = {
-			isa = "PBXGroup";
-			children = (
-				8CCA3D5CBC014D40BD6E8750 /* Gilroy-Bold.ttf */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 
@@ -678,7 +677,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = dev.thienphua7.gmail.weatherrff;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.thienphu-.gmail.weatherrios";
 				PRODUCT_NAME = weather;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -701,7 +700,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = dev.thienphua7.gmail.weatherrff;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.thienphu-.gmail.weatherrios";
 				PRODUCT_NAME = weather;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

@@ -4,6 +4,9 @@ import { name as appName } from './app.json'
 
 if (__DEV__) {
   import('./src/configs/ReactotronConfig').then(() => console.log('Reactotron Configured'))
+} else {
+  console.tron = { log: () => true }
+  // Tranh loi crash khi release co reactrons
 }
 
 AppRegistry.registerComponent(appName, () => App)
