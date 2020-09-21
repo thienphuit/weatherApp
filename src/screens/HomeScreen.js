@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   View,
   Text,
@@ -7,47 +7,64 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
-  ProgressBarAndroid,
-  Platform,
   TouchableOpacity,
+  Animated,
+  TextInput,
 } from 'react-native'
-import axios from 'axios'
 import Swiper from 'react-native-swiper'
-import { ProgressView } from '@react-native-community/progress-view'
+import { useSelector, useDispatch } from 'react-redux'
 import moment from 'moment'
-import AsyncStorage from '@react-native-community/async-storage'
-import Geolocation from '@react-native-community/geolocation'
 import {
   iconSearch, drawer, cloudy, raining, sun,
 } from '../../assets/images'
 import { Colors, paddingHeight, Fonts } from '../../assets/styles'
 import { LineGraphs, TimeComponent, WindComponent } from '../components'
+import { weatherActions } from '../redux/actions'
 
 // let timeOut
 
 const { width, height } = Dimensions.get('window')
 const calWidth = width / 375
-const data = [29, 30, 27, 26, 25, 28]
+const data = [29, 31, 27, 26, 35, 28]
+const listData = [
+  '1',
+  '2',
+]
 
-const HomeScreen = ({ route }) => {
-  const [weathers, setWeather] = useState([])
-  const [nameCity, setNameCity] = useState('')
-  const [bgImage, setBgImage] = useState(cloudy)
-  const [latLon, setLetLon] = useState({
-    lat: 0,
-    lon: 0,
+const HomeScreen = () => {
+  // const [weathers, setWeather] = useState([])
+  const [nameCity, setNameCity] = useState('Ho Chi Minh')
+  const [indexChanged, setIndexChanged] = useState(0)
+  const [bgImage, setBgImage] = useState(raining)
+  const [textInput, setTextInput] = useState('')
+  const dispatch = useDispatch()
+  const weathers = useSelector((state) => state.weather)
+  const aniValue = useRef(new Animated.Value(0)).current
+
+  const handleInputSearch = () => {
+    console.log('============================')
+    console.log('search')
+    console.log('============================')
+    Animated.spring(aniValue, {
+      toValue: 1,
+      tension: 100,
+      useNativeDriver: true,
+    }).start()
+  }
+  const handleHideInput = () => {
+    Animated.spring(aniValue, {
+      toValue: 0,
+      tension: 100,
+      useNativeDriver: true,
+    }).start()
+  }
+  const tranX = aniValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [300 * calWidth, 0],
   })
 
-  const getData = async () => {
-    const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${nameCity === 'Ho Chi Minh'
-      ? 'Ha Noi' : 'Ho Chi Minh'}&appid=751bbe868e283f6d883ca706edfcbc37&units=metric`)
-    setWeather(response.data)
-    setNameCity(nameCity === 'Ho Chi Minh' ? 'Ha Noi' : 'Ho Chi Minh')
-    handleChangeBacground()
-    AsyncStorage.setItem('weather', JSON.stringify(response.data))
-  }
   const handleChangeBacground = () => {
-    const wearther = weathers?.weather && weathers?.weather[0]
+    // const wearther = weathers?.weather && weathers?.weather[0]
     switch (wearther?.main) {
       case 'Clouds':
         setBgImage(cloudy)
@@ -62,21 +79,25 @@ const HomeScreen = ({ route }) => {
         break
     }
   }
+  useEffect(() => {
+    if (indexChanged === 0) {
+      getData('Ho Chi Minh')
+      handleChangeBacground()
+    } else {
+      getData('Ha Noi')
+      handleChangeBacground()
+    }
+  }, [indexChanged])
   const handleSearch = () => {
+    handleInputSearch()
+  }
+  const getData = async (name) => {
+    dispatch(weatherActions.getWeather(name))
   }
 
   useEffect(() => {
-    setWeather(oldWeather)
-    // getData()
+    getData(nameCity)
   }, [])
-
-  Geolocation.getCurrentPosition((info) => {
-    setLetLon({
-      lat: info.coords.latitude,
-      lon: info.coords.longitude,
-    })
-  })
-  const { oldWeather } = route.params
 
   const handlePagination = (index, total) => {
     const dotViews = []
@@ -84,210 +105,156 @@ const HomeScreen = ({ route }) => {
       dotViews.push(
         <View
           key={indexPagination}
-          style={[styles.dot, { backgroundColor: indexPagination === index ? Colors.primaryWrite : '#B4B4B4' }]}
+          style={[styles.dot, { backgroundColor: indexPagination === index ? Colors.primaryWrite : Colors.primaryDot }]}
         />
       )
     }
     return (
-
-      <View style={{
-        flexDirection: 'row',
-        marginLeft: 3,
-        position: 'absolute',
-        backgroundColor: 'transparent',
-      }}
-      >
+      <View style={styles.dotView}>
         {dotViews}
       </View>
     )
   }
+  const handleOnKeyPress = () => {
+    getData(textInput)
+    handleHideInput()
+  }
   const wearther = weathers?.weather && weathers.weather[0]
-  const hunidity = weathers?.main?.humidity
   const now = moment().format('LT - dddd,DD MMM YYYY')
   return (
     <View style={styles.container}>
-      {/* <ImageBackground source={bg_weather} style={styles.imgContainer}> */}
-      {bgImage && <Image
+      { bgImage && <Image
         source={bgImage}
         style={{ position: 'absolute', width, height }}
         resizeMode="cover"
       />}
       <SafeAreaView />
-      <View style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: paddingHeight,
-        // flex: 1,
-      }}
-      >
-        <View style={styles.bgIcon}>
+      <View style={styles.viewHeader}>
+        <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
           <TouchableOpacity onPress={handleSearch}>
-            <Image
-              source={iconSearch}
-              style={{
-                width: 28 * calWidth,
-                height: 28 * calWidth,
-              }}
-              resizeMode="contain"
-            />
+            <View style={styles.bgIcon}>
+              <Image
+                source={iconSearch}
+                style={styles.imageIcon}
+                resizeMode="contain"
+              />
+            </View>
           </TouchableOpacity>
+          <Animated.View style={{
+            height: 40,
+            borderRadius: 5,
+            backgroundColor: Colors.primaryWrite,
+            justifyContent: 'center',
+            flex: 1,
+            marginHorizontal: 10,
+            opacity: aniValue,
+            transform: [{
+              translateX: tranX,
+            }],
+          }}
+          >
+            <TextInput
+              placeholder="Todo..."
+              placeholderTextColor={Colors.primaryProcess}
+              returnKeyType="google"
+              style={{ marginLeft: 10 }}
+              onChangeText={(text) => setTextInput(text)}
+              onSubmitEditing={handleOnKeyPress}
+            // keyboardType="phone-pad"
+            />
+          </Animated.View>
         </View>
         <View style={styles.bgIcon}>
           <Image
             source={drawer}
-            style={{
-              width: 28 * calWidth,
-              height: 28 * calWidth,
-            }}
+            style={styles.imageIcon}
             resizeMode="contain"
           />
         </View>
       </View>
       <ScrollView>
-        <View style={{ marginTop: 57, paddingLeft: paddingHeight, flex: 1 }}>
+        <View style={styles.viewSwipperWrapper}>
           <Swiper
             showsPagination
             loadMinimal
             loadMinimalSize={width * 0.5}
             renderPagination={handlePagination}
             onIndexChanged={(index) => {
-              switch (index) {
-                case 0: {
-                  getData()
-                  handleChangeBacground()
-                  break
-                }
-                case 1: {
-                  getData()
-                  handleChangeBacground()
-                  break
-                }
-                default:
-                  console.log('ssss')
-              }
+              setIndexChanged(index)
             }}
           >
-            <View style={{ marginTop: 28 }}>
-              <Text style={styles.titleCity}>{weathers?.name}</Text>
-              <Text style={{
-                color: Colors.primaryWrite, ...Fonts.bold, fontSize: 18, marginTop: 8,
-              }}
-              >
-                {now}
-              </Text>
-              <Text style={styles.temp}>{`${weathers?.main?.temp} *`}</Text>
-              <View style={styles.styleStatus}>
-                <Image
-                  source={{ uri: `http://openweathermap.org/img/w/${wearther?.icon}.png` }}
-                  style={{
-                    width: 40 * calWidth,
-                    height: 40 * calWidth,
-                  }}
-                />
-                <Text style={styles.status}>{wearther?.main}</Text>
-              </View>
-              <View style={[styles.styleStatus, { flexDirection: 'row', justifyContent: 'space-around' }]}>
-                <WindComponent speed={weathers?.wind?.speed} label="Wind" unit="Km/h" />
-                <WindComponent speed={0} label="Rain" unit="mi/h" />
-                <WindComponent speed={weathers?.main?.humidity} label="Clounds" unit="%" />
-              </View>
-              <View style={{
-                marginTop: 24,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginRight: 20,
-              }}
-              >
-                <TimeComponent icon={wearther?.icon} time="12:00" tempature="28*" />
-                <TimeComponent icon={wearther?.icon} time="13:00" tempature="28*" />
-                <TimeComponent icon={wearther?.icon} time="14:00" tempature="28*" />
-                <TimeComponent icon={wearther?.icon} time="15:00" tempature="28*" />
-                <TimeComponent icon={wearther?.icon} time="16:00" tempature="28*" />
-              </View>
-
-              <View>
-                <LineGraphs data={data} />
-              </View>
-
-              <SafeAreaView />
-            </View>
+            {listData.map((item) => {
+              return (
+                <View style={{ marginTop: 28 }} key={item}>
+                  <Text style={styles.titleCity}>{weathers?.name}</Text>
+                  <Text style={styles.formatTime}>
+                    {now}
+                  </Text>
+                  <Text style={styles.temp}>{`${weathers?.main?.temp.toFixed()} *`}</Text>
+                  <View style={styles.styleStatus}>
+                    <Image
+                      source={{ uri: `http://openweathermap.org/img/w/${wearther?.icon}.png` }}
+                      style={{
+                        width: 40 * calWidth,
+                        height: 40 * calWidth,
+                      }}
+                    />
+                    <Text style={styles.status}>{wearther?.main}</Text>
+                  </View>
+                  <View style={[styles.styleStatus, { justifyContent: 'space-between' }]}>
+                    <WindComponent speed={weathers?.wind?.speed} label="Wind" unit="Km/h" />
+                    <WindComponent speed={0} label="Rain" unit="mi/h" />
+                    <WindComponent speed={weathers?.main?.humidity} label="Clounds" unit="%" />
+                  </View>
+                  <View style={styles.timeHour}>
+                    <TimeComponent icon={wearther?.icon} time="12:00" tempature="28*" />
+                    <TimeComponent icon={wearther?.icon} time="13:00" tempature="28*" />
+                    <TimeComponent icon={wearther?.icon} time="14:00" tempature="28*" />
+                    <TimeComponent icon={wearther?.icon} time="15:00" tempature="28*" />
+                    <TimeComponent icon={wearther?.icon} time="16:00" tempature="28*" />
+                  </View>
+                  <View>
+                    <LineGraphs data={data} />
+                  </View>
+                  <SafeAreaView />
+                </View>
+              )
+            })}
             {/* Create component  re-call */}
-            <View style={{ marginTop: 28 }}>
-              <Text style={styles.titleCity}>{weathers?.name}</Text>
-              <Text style={{
-                color: Colors.primaryWrite,
-                ...Fonts.bold,
-                fontSize: 18,
-                marginTop: 8,
-              }}
-              >
-                {now}
-              </Text>
-              <Text style={styles.temp}>{`${weathers?.main?.temp} *`}</Text>
-              <View style={styles.styleStatus}>
-                <Image
-                  source={{ uri: `http://openweathermap.org/img/w/${wearther?.icon}.png` }}
-                  style={{
-                    width: 40 * calWidth,
-                    height: 40 * calWidth,
-                  }}
-                />
-                <Text style={styles.status}>{wearther?.main}</Text>
-              </View>
-              <View style={{ marginTop: 40, flexDirection: 'row', justifyContent: 'space-around' }}>
-                <View>
-                  <Text style={styles.labelWind}>Wind</Text>
-                  <Text style={styles.labelNumber}>{weathers?.wind?.speed}</Text>
-                  <Text style={styles.labelUnit}>28*</Text>
-                  {
-                    (Platform.OS === 'android')
-                      ? (<ProgressBarAndroid color={Colors.primaryProcess} progress={0.4} styleAttr="Horizontal" indeterminate={false} />)
-                      : (<ProgressView progressTintColor={Colors.primaryProcess} progress={0.4} styleAttr="Horizontal" indeterminate={false} />)
-                  }
-                </View>
-                <View>
-                  <Text style={styles.labelWind}>Rain</Text>
-                  <Text style={styles.labelNumber}>0</Text>
-                  <Text style={styles.labelUnit}>%</Text>
-                  {
-                    (Platform.OS === 'android')
-                      ? (<ProgressBarAndroid color={Colors.primaryProcess} progress={0.6} styleAttr="Horizontal" indeterminate={false} />)
-                      : (<ProgressView progressTintColor={Colors.primaryProcess} progress={0.6} styleAttr="Horizontal" indeterminate={false} />)
-                  }
-                </View>
-                <View>
-                  <Text style={styles.labelWind}>Clounds</Text>
-                  <Text style={styles.labelNumber}>{weathers?.main?.humidity}</Text>
-                  <Text style={styles.labelUnit}>%</Text>
-                  {
-                    (Platform.OS === 'android')
-                      ? (<ProgressBarAndroid
-                        color={Colors.primaryProcess}
-                        progress={hunidity && (hunidity / 100)}
-                        styleAttr="Horizontal"
-                        indeterminate={false}
-                      />)
-                      : (<ProgressView
-                        progressTintColor={Colors.primaryProcess}
-                        progress={hunidity && (hunidity / 100)}
-                        styleAttr="Horizontal"
-                        indeterminate={false}
-                      />)
-                  }
-                </View>
-
-              </View>
-            </View>
-
           </Swiper>
         </View>
-
       </ScrollView>
-      {/* </ImageBackground> */}
     </View>
   )
 }
 const styles = StyleSheet.create({
+  viewHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: paddingHeight,
+  },
+  timeHour: {
+    marginTop: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginRight: 20,
+  },
+  formatTime: {
+    color: Colors.primaryWrite, ...Fonts.bold, fontSize: 18, marginTop: 8,
+  },
+  viewSwipperWrapper: {
+    marginTop: 57 * calWidth, paddingLeft: paddingHeight, flex: 1,
+  },
+  imageIcon: {
+    width: 28 * calWidth,
+    height: 28 * calWidth,
+  },
+  dotView: {
+    flexDirection: 'row',
+    marginLeft: 3,
+    position: 'absolute',
+    backgroundColor: 'transparent',
+  },
   labelUnit: {
     fontSize: 24 * calWidth,
     color: Colors.primaryWrite,

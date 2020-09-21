@@ -8,6 +8,7 @@ export const calWidth = width / 375
 export const Colors = {
   primaryWrite: '#fff',
   primaryProcess: '#1BED62',
+  primaryDot: '#B4B4B4',
 }
 export const Fonts = {
   bold: {

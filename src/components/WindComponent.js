@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 })
 WindComponent.propTypes = {
   label: PropTypes.string.isRequired,
-  speed: PropTypes.string.isRequired,
+  // speed: PropTypes.number.isRequired,
   unit: PropTypes.string.isRequired,
 
 }

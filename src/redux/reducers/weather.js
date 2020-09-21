@@ -6,9 +6,9 @@ const initState = {
 
 const weatherReducer = (state = initState, action) => {
   switch (action.type) {
-    case typeWearther.GET_WEATHER:
+    case typeWearther.GET_WEATHER_SUCCESS:
       return {
-        ...state, ...state.listWheather,
+        ...action.payload.data,
       }
 
     default:
