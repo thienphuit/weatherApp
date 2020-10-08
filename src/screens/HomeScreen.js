@@ -42,9 +42,6 @@ const HomeScreen = () => {
   const aniValue = useRef(new Animated.Value(0)).current
 
   const handleInputSearch = () => {
-    console.log('============================')
-    console.log('search')
-    console.log('============================')
     Animated.spring(aniValue, {
       toValue: 1,
       tension: 100,
@@ -154,7 +151,7 @@ const HomeScreen = () => {
           }}
           >
             <TextInput
-              placeholder="Todo..."
+              placeholder="Search..."
               placeholderTextColor={Colors.primaryProcess}
               returnKeyType="google"
               style={{ marginLeft: 10 }}
@@ -172,7 +169,7 @@ const HomeScreen = () => {
           />
         </View>
       </View>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.viewSwipperWrapper}>
           <Swiper
             showsPagination

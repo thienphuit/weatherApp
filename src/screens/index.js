@@ -1,6 +1,6 @@
 import HomeScreen from './HomeScreen'
-import FlashScreen from './FlashScreen'
+import SplashScreen from './SplashScreen'
 
 export {
-  HomeScreen, FlashScreen,
+  HomeScreen, SplashScreen,
 }

@@ -5,7 +5,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { store } from './src/redux'
-import { FlashScreen, HomeScreen } from './src/screens'
+import { FlashScreen, HomeScreen, SplashScreen } from './src/screens'
 
 // navigator.geolocation = require('@react-native-community/geolocation')
 
@@ -27,7 +27,7 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="FlashScreen" component={FlashScreen} />
+          <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Setting" component={Setting} />
         </Stack.Navigator>
